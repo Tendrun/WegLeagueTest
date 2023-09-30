@@ -14,7 +14,7 @@ namespace WegLeagueTest.Riot
 {
     public class Requests
     {
-        string RiotApiKey = Key.KeyValue;
+        const string RiotApiKey = Key.KeyValue;
         const string LocalHost = "https://127.0.0.1:2999/";
 
         public enum Division
@@ -61,7 +61,7 @@ namespace WegLeagueTest.Riot
         4./lol/match/v5/matches/{matchId} matchid => Allinfo of math
         */
 
-        public async void CreatePlayerDB(Regions region, WorldRegions worldregion)
+        public void CreatePlayerDB(Regions region, WorldRegions worldregion)
         {
             List<Riot.ResponseModel.Player> players = new List<ResponseModel.Player>();
 
@@ -78,13 +78,8 @@ namespace WegLeagueTest.Riot
                 {
                     Division division = Division.I;
                     List<ResponseModel.LeagueEntryDTO> SummonersIds = GetSummonerIds(division, tier, queue, region);
-                    MessageBox.Show("counting SummonersIds ended");
-                    MessageBox.Show("SummonersIds number = " + SummonersIds.Count);
                     List<ResponseModel.SummonerDTO> Puuids = GetPuuids(SummonersIds, region);
-                    MessageBox.Show("counting Puuids ended number = " + Puuids.Count);
                     //by summonerIds.summonerid -> SummonerDTO.id add puuid
-
-                    MessageBox.Show(SummonersIds.Count.ToString());
 
                     //find in db of match repeats if not add,
                     //if player doesnt exit in db add him
@@ -213,53 +208,12 @@ namespace WegLeagueTest.Riot
             return ListOfPuuids;
         }
 
-        public List<string> ReturnMatchesId(List<ResponseModel.SummonerDTO> summonerDTO, WorldRegions region)
-        {
-            int count = 20;
-            string Type = "ranked";
-
-            List<string> ListOfmatchtes = new List<string>();
-
-            for (int i = 0; i < summonerDTO.Count; i++)
-            {
-                //link
-                //Send query based on puuid
-
-                //count from 1 to 100 max
-                string GetPlayers = $"https://{region}.api.riotgames.com/lol/match/v5/matches/by-puuid/{summonerDTO[i].puuid}/ids?type={Type}&count={count}";
-
-                //client
-                using (HttpClient client = CreateClient())
-                {
-
-                    //request
-                    var request = CreatehttpRequestMessage(new Uri(GetPlayers), HttpMethod.Get);
-
-                    //send query
-                    var responseMessage = SendRequest(client, request, nameof(ReturnMatchesId));
-
-                    string responseMessageString = responseMessage.Content.ReadAsStringAsync().Result;
-
-                    List<string> ListOfMtaches = JsonSerializer.Deserialize<List<string>>(responseMessageString);
-
-                    foreach (var match in ListOfMtaches)
-                    {
-                        //add Match to list
-                        ListOfmatchtes.Add(match);
-                    }
-
-                }
-            }
-
-            return ListOfmatchtes;
-        }
-
         public List<string> ReturnMatchesId(ResponseModel.SummonerDTO summonerDTO, WorldRegions region)
         {
             int count = 2;
             string Type = "ranked";
 
-            List<string> ListOfmatchtes = new List<string>();
+            List<string> ReturnMatches = new List<string>();
 
             //link
             //Send query based on puuid
@@ -278,27 +232,17 @@ namespace WegLeagueTest.Riot
                 var responseMessage = SendRequest(client, request, nameof(ReturnMatchesId));
                 string responseMessageString = responseMessage.Content.ReadAsStringAsync().Result;
 
-                //List<string> ListOfMtaches = JsonSerializer.Deserialize<List<string>>(responseMessageString);
-
-                List<string> ListOfMtaches = new List<string>();
+                List<string> ListOfMtaches = JsonSerializer.Deserialize<List<string>>(responseMessageString);               
 
                 // Deserialize each string in the list one by one
                 foreach (string jsonString in ListOfMtaches)
                 {                   
-                    string deserializedString = JsonSerializer.Deserialize<string>(jsonString);
-                    ListOfMtaches.Add(deserializedString);                                  
+                    ReturnMatches.Add(jsonString);                                  
                 }
-
-                foreach (var match in ListOfMtaches)
-                {
-                    //add Match to list
-                    ListOfmatchtes.Add(match);
-                }
-
             }
             
 
-            return ListOfmatchtes;
+            return ReturnMatches;
         }
 
         public List<ResponseModel.MatchDto> ReturnMatchInfo(List<string> matchId, WorldRegions region)

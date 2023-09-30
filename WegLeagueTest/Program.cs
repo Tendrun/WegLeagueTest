@@ -16,49 +16,53 @@ namespace WegLeagueTest
     {
         public static void Main(string[] args)
         {
-
+            //Create Database from players
             Riot.Requests Req = new Riot.Requests();
-
-
-            //rate Limit problem error 429
-            //re send header and set httpclient rate limit
-
-            Req.CreatePlayerDB(Riot.Requests.Regions.eun1, Riot.Requests.WorldRegions.europe);
-
-
-
-            //for now 2 matches
-
             /*
-            List<string> ListOfMatches = new List<string> { "EUN1_3454690331" };
-            var MatchesInfo = Req.ReturnMatchInfo(ListOfMatches, Riot.Requests.WorldRegions.europe);
+            Req.CreatePlayerDB(Riot.Requests.Regions.eun1, Riot.Requests.WorldRegions.europe);
+            */
 
             //Check if match is up to today's patch
 
             //Read file champion data
 
-            Riot.ChampionData championDatas;
+            Riot.ChampionData championDatas = new Riot.ChampionData();
             using (StreamReader r = new StreamReader(@"C:\Users\mikis\Downloads\dragontail-13.18.1\13.18.1\data\en_US\champion.json"))
             {
                 string jsondata = r.ReadToEnd();
+
                 championDatas = JsonSerializer.Deserialize<Riot.ChampionData>(jsondata);
             }
+            // -1 no ban
+
 
             //for now try to get the biggest ban rate
-
-            
-            var MatchInfo = MatchesInfo[0];
-
-            int i = 1;
-            foreach (var ban in MatchInfo.info.teams[0].bans)
+            List<Riot.ResponseModel.Player> PlayersDatas = new List<Riot.ResponseModel.Player>();
+            using (StreamReader r = new StreamReader(@"C:\Users\mikis\Documents\WazneProgramy\LOLDB\Players.txt"))
             {
-                MessageBox.Show($"ban {i} + "+ ban.championId.ToString());
+                string jsondata = r.ReadToEnd();
+                PlayersDatas = JsonSerializer.Deserialize<List<Riot.ResponseModel.Player>>(jsondata);
+            }
+
+            List<Riot.ResponseModel.MatchDto> MatchesInfo = new List<Riot.ResponseModel.MatchDto>();
+            foreach (var data in PlayersDatas)
+            {
+                MatchesInfo =  Req.ReturnMatchInfo(data.matchDtos, Riot.Requests.WorldRegions.europe);                
+            }
+
+            MessageBox.Show("MatchesInfo = "+ MatchesInfo.Count);
+
+            foreach (var match in MatchesInfo)
+            {
+                foreach (var team in match.info.teams)
+                {
+                    foreach (var ban in team.bans)
+                    {
+                        MessageBox.Show(ban.championId.ToString());
+                    }                   
+                }
             }
             
-
-            //MatchInfo.info.teams[0].bans
-            */
-
             CreateHostBuilder(args).Build().Run();
         }
 

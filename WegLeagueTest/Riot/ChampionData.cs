@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace WegLeagueTest.Riot
 {
+    //DONT BE MISTAKEN TO DESERIALIZE DATA USE ChampionData
     public class ChampionData
     {
         public string type { get; set; }
