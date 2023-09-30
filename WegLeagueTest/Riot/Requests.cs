@@ -14,7 +14,7 @@ namespace WegLeagueTest.Riot
 {
     public class Requests
     {
-        string RiotApiKey = "";
+        string RiotApiKey = Key.KeyValue;
         const string LocalHost = "https://127.0.0.1:2999/";
 
         public enum Division

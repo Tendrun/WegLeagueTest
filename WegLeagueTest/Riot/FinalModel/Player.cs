@@ -9,6 +9,7 @@ namespace WegLeagueTest.Riot.ResponseModel
     {
         //for now all matches and puuid 
 
+
         //summonerid etc
         public LeagueEntryDTO leagueEntryDTO { get; set; }
 
