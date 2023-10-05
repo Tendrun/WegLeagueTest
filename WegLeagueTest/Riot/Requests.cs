@@ -258,19 +258,17 @@ namespace WegLeagueTest.Riot
                 //client
                 using (HttpClient client = CreateClient())
                 {
-
-                    //request
                     var request = CreatehttpRequestMessage(new Uri(GetPlayers), HttpMethod.Get);
 
                     //send query
-                    var responseMessage = client.SendAsync(request).Result;
+                    var responseMessage = SendRequest(client, request, nameof(ReturnMatchesId));
                     string responseMessageString = responseMessage.Content.ReadAsStringAsync().Result;
 
                     ResponseModel.MatchDto match = JsonSerializer.Deserialize<ResponseModel.MatchDto>(responseMessageString);
 
-                    ListOfmatchtes.Add(match);
-                    
 
+
+                    ListOfmatchtes.Add(match);                   
                 }
             }
 
@@ -339,6 +337,10 @@ namespace WegLeagueTest.Riot
                             break;
                         }
                     }
+                }
+                else if (responseMessage.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    MessageBox.Show("Change Riot Api Key", "Riot Api Key is invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 else

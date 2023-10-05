@@ -11,20 +11,30 @@ namespace WegLeagueTest.Database
     public class DataAnalyzer
     {
         Riot.ChampionData ChampionDatas;
+        const string JsonPath = @"C:\Users\mikis\Downloads\dragontail-13.18.1\13.18.1\data\en_US\champion.json";
 
-        DataAnalyzer()
+
+        //Read data about champions on creating instance DataAnalyzer
+        public DataAnalyzer()
         {
-            using (StreamReader r = new StreamReader(@"C:\Users\mikis\Downloads\dragontail-13.18.1\13.18.1\data\en_US\champion.json"))
+            using (StreamReader r = new StreamReader(JsonPath))
             {
                 string jsondata = r.ReadToEnd();
                 ChampionDatas = JsonSerializer.Deserialize<Riot.ChampionData>(jsondata);
             }
         }
 
-        public string BanRate(List<Riot.ResponseModel.MatchDto> MatchesInfo)
+        public Tuple<int, List<Riot.BanData>> CountBanRate(List<Riot.ResponseModel.MatchDto> MatchesInfo)
         {
-            //read
-            List<Riot.ChampionData> ChampionDatas
+            //create list of champions to count bans for every invidual
+            List<Riot.BanData> banDatas = new List<Riot.BanData>();
+
+            int bans = 0;
+
+            foreach (var data in ChampionDatas.data.Values)
+            {
+                banDatas.Add(new Riot.BanData(data.id, data.key));
+            }
 
             foreach (var match in MatchesInfo)
             {
@@ -32,12 +42,20 @@ namespace WegLeagueTest.Database
                 {
                     foreach (var ban in team.bans)
                     {
-                        MessageBox.Show(ban.championId.ToString());
+                        var ReturnedElement = banDatas.FirstOrDefault(banData => banData.key == ban.championId.ToString());
+
+                        if (ReturnedElement != null)
+                        {
+                            bans++;
+                            ReturnedElement.NumBans++;
+                        }
                     }
                 }
             }
 
-            return null;
+
+
+            return new Tuple<int, List<Riot.BanData>>(bans, banDatas);
         }
     }
 }

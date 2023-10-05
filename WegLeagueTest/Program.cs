@@ -18,51 +18,29 @@ namespace WegLeagueTest
         {
             //Create Database from players
             Riot.Requests Req = new Riot.Requests();
-            /*
-            Req.CreatePlayerDB(Riot.Requests.Regions.eun1, Riot.Requests.WorldRegions.europe);
-            */
-
-            //Check if match is up to today's patch
-
-            //Read file champion data
-
-            Riot.ChampionData championDatas = new Riot.ChampionData();
-            using (StreamReader r = new StreamReader(@"C:\Users\mikis\Downloads\dragontail-13.18.1\13.18.1\data\en_US\champion.json"))
-            {
-                string jsondata = r.ReadToEnd();
-
-                championDatas = JsonSerializer.Deserialize<Riot.ChampionData>(jsondata);
-            }
-            // -1 no ban
+            WegLeagueTest.Database.DatabaseManager database = new Database.DatabaseManager();
+            Database.DataAnalyzer dataAnalyzer = new Database.DataAnalyzer();
 
 
-            //for now try to get the biggest ban rate
-            List<Riot.ResponseModel.Player> PlayersDatas = new List<Riot.ResponseModel.Player>();
-            using (StreamReader r = new StreamReader(@"C:\Users\mikis\Documents\WazneProgramy\LOLDB\Players.txt"))
-            {
-                string jsondata = r.ReadToEnd();
-                PlayersDatas = JsonSerializer.Deserialize<List<Riot.ResponseModel.Player>>(jsondata);
-            }
+            //read database
+            List<Riot.ResponseModel.Player> PlayersDatas = database.ReadPlayersDB();
+
+
 
             List<Riot.ResponseModel.MatchDto> MatchesInfo = new List<Riot.ResponseModel.MatchDto>();
             foreach (var data in PlayersDatas)
             {
-                MatchesInfo =  Req.ReturnMatchInfo(data.matchDtos, Riot.Requests.WorldRegions.europe);                
+                MatchesInfo = Req.ReturnMatchInfo(data.matchDtos, Riot.Requests.WorldRegions.europe);
             }
 
-            MessageBox.Show("MatchesInfo = "+ MatchesInfo.Count);
+            Tuple<int, List<Riot.BanData>> datas = dataAnalyzer.CountBanRate(MatchesInfo);
 
-            foreach (var match in MatchesInfo)
+            foreach (var banData in datas.Item2)
             {
-                foreach (var team in match.info.teams)
-                {
-                    foreach (var ban in team.bans)
-                    {
-                        MessageBox.Show(ban.championId.ToString());
-                    }                   
-                }
+                string message = $"ID: {banData.id}, NumBans: {float. banData.NumBans / datas.Item1}%";
+                MessageBox.Show(message, "Ban Data Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            
+
             CreateHostBuilder(args).Build().Run();
         }
 
