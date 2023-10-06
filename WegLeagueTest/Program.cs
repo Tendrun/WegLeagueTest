@@ -16,11 +16,13 @@ namespace WegLeagueTest
     {
         public static void Main(string[] args)
         {
+            /*
             //Create Database from players
             Riot.Requests Req = new Riot.Requests();
             WegLeagueTest.Database.DatabaseManager database = new Database.DatabaseManager();
             Database.DataAnalyzer dataAnalyzer = new Database.DataAnalyzer();
-
+            
+            //change paths
 
             //read database
             List<Riot.ResponseModel.Player> PlayersDatas = database.ReadPlayersDB();
@@ -37,10 +39,11 @@ namespace WegLeagueTest
 
             foreach (var banData in datas.Item2)
             {
-                string message = $"ID: {banData.id}, NumBans: {float. banData.NumBans / datas.Item1}%";
-                MessageBox.Show(message, "Ban Data Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (banData.NumBans == 0) continue;
+                //string message = $"ID: {banData.id}, total bans: {datas.Item1} Champion bans: {banData.NumBans}  NumBans: {Math.Round((float)((float)banData.NumBans / datas.Item1), 3, MidpointRounding.AwayFromZero) * 100}%";
+                //MessageBox.Show(message, "Ban Data Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
+            */
             CreateHostBuilder(args).Build().Run();
         }
 

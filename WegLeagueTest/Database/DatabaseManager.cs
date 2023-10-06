@@ -9,7 +9,7 @@ namespace WegLeagueTest.Database
 {
     public class DatabaseManager
     {
-        const string PlayersDBpath = @"C:\Users\mikis\Documents\WazneProgramy\LOLDB\Players.txt";
+        const string PlayersDBpath = @"C:\Users\Mikołaj\Downloads\Players.txt";
 
         public void OverridePlayersDB(List<Riot.ResponseModel.Player> players)
         {

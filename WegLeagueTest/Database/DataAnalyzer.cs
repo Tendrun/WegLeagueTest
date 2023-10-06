@@ -11,7 +11,7 @@ namespace WegLeagueTest.Database
     public class DataAnalyzer
     {
         Riot.ChampionData ChampionDatas;
-        const string JsonPath = @"C:\Users\mikis\Downloads\dragontail-13.18.1\13.18.1\data\en_US\champion.json";
+        const string JsonPath = @"C:\Users\Mikołaj\Downloads\dragontail-13.18.1.json";
 
 
         //Read data about champions on creating instance DataAnalyzer
