@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WegLeagueTest.Riot;
 
 namespace WegLeagueTest.Data
 {
@@ -12,5 +13,6 @@ namespace WegLeagueTest.Data
             : base(options)
         {
         }
+        public DbSet<WegLeagueTest.Riot.BanData> BanData { get; set; }
     }
 }

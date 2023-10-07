@@ -11,7 +11,7 @@ namespace WegLeagueTest.Database
     public class DataAnalyzer
     {
         Riot.ChampionData ChampionDatas;
-        const string JsonPath = @"C:\Users\Mikołaj\Downloads\dragontail-13.18.1.json";
+        const string JsonPath = @"C:\Users\mikis\Downloads\dragontail-13.18.1\13.18.1\data\en_US\champion.json";
 
 
         //Read data about champions on creating instance DataAnalyzer
@@ -33,7 +33,7 @@ namespace WegLeagueTest.Database
 
             foreach (var data in ChampionDatas.data.Values)
             {
-                banDatas.Add(new Riot.BanData(data.id, data.key));
+                banDatas.Add(new Riot.BanData { Id = data.id, key = data.key });
             }
 
             foreach (var match in MatchesInfo)
