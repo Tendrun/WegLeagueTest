@@ -24,38 +24,45 @@ namespace WegLeagueTest.Database
             }
         }
 
-        public Tuple<int, List<Riot.BanData>> CountBanRate(List<Riot.ResponseModel.MatchDto> MatchesInfo)
+        public Riot.BanData CountBanRate(List<Riot.ResponseModel.MatchDto> MatchesInfo)
         {
             //create list of champions to count bans for every invidual
-            List<Riot.BanData> banDatas = new List<Riot.BanData>();
-
-            int bans = 0;
+            Riot.BanData banData = new Riot.BanData();
 
             foreach (var data in ChampionDatas.data.Values)
             {
-                banDatas.Add(new Riot.BanData { Id = data.id, key = data.key });
+                banData.ChampionBans.Add(new Riot.ChampionBan { Id = data.id, key = data.key });                
             }
 
+            //Get Champion who is banning and what lane
+            //then get what champion he is banning
             foreach (var match in MatchesInfo)
             {
                 foreach (var team in match.info.teams)
                 {
                     foreach (var ban in team.bans)
                     {
-                        var ReturnedElement = banDatas.FirstOrDefault(banData => banData.key == ban.championId.ToString());
+                        //info.teams.bans.championid pickTurn
+                        var ReturnedElement = banData.ChampionBans.FirstOrDefault(banData => banData.key == ban.championId.ToString());
 
                         if (ReturnedElement != null)
                         {
-                            bans++;
-                            ReturnedElement.NumBans++;
+                            banData.NumofAllBans++;
+                            ReturnedElement.NumbChampionBans++;
                         }
                     }
                 }
             }
 
 
+            //count ban percentage
+            foreach (var ban in banData.ChampionBans)
+            {
+                if (ban.NumbChampionBans == 0) continue;
+                ban.PercBan = Math.Round((float)ban.NumbChampionBans / (float)banData.NumofAllBans, 3, MidpointRounding.AwayFromZero) * 100;
+            }
 
-            return new Tuple<int, List<Riot.BanData>>(bans, banDatas);
+            return banData;
         }
     }
 }

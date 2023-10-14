@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WegLeagueTest.Riot.BanData>
+﻿@model WegLeagueTest.Riot.BanData
 
 @{
     ViewData["Title"] = "ChampionsDataView";
@@ -13,22 +13,37 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.NumBans)
+                rank
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.key)
+                role
+            </th>
+            <th>
+                Champion name
+            </th>
+            <th>
+                Tier
+            </th>
+            <th>
+                pick percentage
+            </th>
+            <th>
+                Ban percentage
+            </th>
+            <th>
+                Counter picks
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.ChampionBans) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.NumBans)
+                @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.key)
+                @Html.DisplayFor(modelItem => item.PercBan)
             </td>
         </tr>
 }

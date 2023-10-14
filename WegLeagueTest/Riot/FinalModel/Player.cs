@@ -19,4 +19,19 @@ namespace WegLeagueTest.Riot.ResponseModel
         //matches
         public List<string> matchDtos { get; set; }
     }
+
+    public class FinalPlayer
+    {
+        //for now all matches and puuid 
+
+
+        //summonerid etc
+        public LeagueEntryDTO leagueEntryDTO { get; set; }
+
+        //puuuid
+        public SummonerDTO summonerDTO { get; set; }
+
+        //matches
+        public Tuple<string, MatchDto, MatchTimelineDto> matchDtos { get; set; }
+    }
 }

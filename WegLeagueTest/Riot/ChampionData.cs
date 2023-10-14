@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 namespace WegLeagueTest.Riot
 {
     //DONT BE MISTAKEN TO DESERIALIZE DATA USE ChampionData
+
+    public enum ChampionPosition
+    {
+        TOP,
+        JUNGLE,
+        MIDDLE,
+        BOTTOM,
+        UTILITY,
+    }
+
     public class ChampionData
     {
         public string type { get; set; }
