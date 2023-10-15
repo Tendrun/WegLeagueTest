@@ -25,14 +25,21 @@
                 Tier
             </th>
             <th>
-                pick percentage
+                Win Rate
             </th>
             <th>
-                Ban percentage
+                Pick Rate
+            </th>
+            <th>
+                Ban Rate
             </th>
             <th>
                 Counter picks
             </th>
+            <th>
+                Matches
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -40,10 +47,13 @@
 @foreach (var item in Model.ChampionBans) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @Html.DisplayFor(modelItem => item.Rank)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PercBan)
+                @Html.DisplayFor(modelItem => item.BanRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BanRate)
             </td>
         </tr>
 }

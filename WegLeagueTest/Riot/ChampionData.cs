@@ -7,6 +7,15 @@ namespace WegLeagueTest.Riot
 {
     //DONT BE MISTAKEN TO DESERIALIZE DATA USE ChampionData
 
+    public enum TierChampion
+    {
+        S,
+        A,
+        B,
+        C,
+        D,
+    }
+
     public enum ChampionPosition
     {
         TOP,

@@ -38,6 +38,42 @@ namespace WegLeagueTest.Database
             //then get what champion he is banning
             foreach (var match in MatchesInfo)
             {
+                // This is MetadataDto
+
+                //This is InfoDto
+                foreach (var participant in match.info.participants)
+                {
+                    MessageBox.Show("championName = " + participant.championName);
+
+                    //Champion pick rate
+                    var ReturnedElement = banData.ChampionBans.FirstOrDefault(banData => banData.Id == participant.championName);
+
+                    MessageBox.Show("ReturnedElement = " + ReturnedElement.Id + " participant = " + participant.championName + " Role = " + participant.teamPosition);
+
+                    if (ReturnedElement != null)
+                    {
+                        //find in dictionary proper lane
+                        var element = ReturnedElement.pickChampionDatas.FirstOrDefault(data => data.Key.ToString() == participant.teamPosition);
+
+                        //if found add
+                        if (element.Value != null)
+                        {
+                            element.Value.Matches++;
+                        }
+                        //if not add to dictionary key
+                        else
+                        {
+                            Enum.TryParse(participant.teamPosition, out Riot.ChampionPosition position);
+                            ReturnedElement.pickChampionDatas.Add(position, new Riot.PickChampionData());
+                            element = ReturnedElement.pickChampionDatas.FirstOrDefault(data => data.Key.ToString() == participant.teamPosition);
+                            element.Value.Matches++;
+                        }
+                        
+                    }
+
+                }
+
+                //Champion Ban Rate
                 foreach (var team in match.info.teams)
                 {
                     foreach (var ban in team.bans)
@@ -59,7 +95,7 @@ namespace WegLeagueTest.Database
             foreach (var ban in banData.ChampionBans)
             {
                 if (ban.NumbChampionBans == 0) continue;
-                ban.PercBan = Math.Round((float)ban.NumbChampionBans / (float)banData.NumofAllBans, 3, MidpointRounding.AwayFromZero) * 100;
+                ban.BanRate = Math.Round((float)ban.NumbChampionBans / (float)banData.NumofAllBans, 3, MidpointRounding.AwayFromZero) * 100;
             }
 
             return banData;
