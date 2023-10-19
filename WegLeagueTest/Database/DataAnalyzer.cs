@@ -31,7 +31,18 @@ namespace WegLeagueTest.Database
 
             foreach (var data in ChampionDatas.data.Values)
             {
-                banData.ChampionBans.Add(new Riot.ChampionBan { Id = data.id, key = data.key });                
+                Riot.ChampionBan championBan = new Riot.ChampionBan
+                {
+                    Id = data.id,
+                    key = data.key
+                };
+
+                foreach (Riot.ChampionPosition position in Enum.GetValues(typeof(Riot.ChampionPosition)))
+                {
+                    championBan.pickChampionDatas[position] = new Riot.PickChampionData();
+                }
+
+                banData.ChampionBans.Add(championBan);
             }
 
             //Get Champion who is banning and what lane
@@ -43,22 +54,22 @@ namespace WegLeagueTest.Database
                 //This is InfoDto
                 foreach (var participant in match.info.participants)
                 {
-                    MessageBox.Show("championName = " + participant.championName);
-
                     //Champion pick rate
                     var ReturnedElement = banData.ChampionBans.FirstOrDefault(banData => banData.Id == participant.championName);
 
-                    MessageBox.Show("ReturnedElement = " + ReturnedElement.Id + " participant = " + participant.championName + " Role = " + participant.teamPosition);
-
                     if (ReturnedElement != null)
                     {
+                        //if element found add match
+                        banData.NumbOfMatches++;
                         //find in dictionary proper lane
                         var element = ReturnedElement.pickChampionDatas.FirstOrDefault(data => data.Key.ToString() == participant.teamPosition);
 
                         //if found add
                         if (element.Value != null)
                         {
+                            
                             element.Value.Matches++;
+                            if(participant.win == true) element.Value.wins++;
                         }
                         //if not add to dictionary key
                         else
@@ -67,6 +78,7 @@ namespace WegLeagueTest.Database
                             ReturnedElement.pickChampionDatas.Add(position, new Riot.PickChampionData());
                             element = ReturnedElement.pickChampionDatas.FirstOrDefault(data => data.Key.ToString() == participant.teamPosition);
                             element.Value.Matches++;
+                            if (participant.win == true) element.Value.wins++;
                         }
                         
                     }
@@ -96,6 +108,16 @@ namespace WegLeagueTest.Database
             {
                 if (ban.NumbChampionBans == 0) continue;
                 ban.BanRate = Math.Round((float)ban.NumbChampionBans / (float)banData.NumofAllBans, 3, MidpointRounding.AwayFromZero) * 100;
+            }
+
+            //Pick Rate
+            foreach (var pick in banData.ChampionBans)
+            {
+                foreach (var p in pick.pickChampionDatas.Values)
+                {
+                    if (p.wins == 0) continue;
+                    p.Winrate = Math.Round((float)p.wins / (float)banData.NumbOfMatches, 3, MidpointRounding.AwayFromZero) * 100;
+                }
             }
 
             return banData;

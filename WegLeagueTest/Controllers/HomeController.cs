@@ -24,6 +24,8 @@ namespace WegLeagueTest.Controllers
             return View();
         }
 
+        //temp for here
+        Riot.BanData datas;
         public IActionResult ChampionsDataView()
         {
             //Create Database from players
@@ -44,9 +46,19 @@ namespace WegLeagueTest.Controllers
                 MatchesInfo = Req.ReturnMatchInfo(data.matchDtos, Riot.Requests.WorldRegions.europe);
             }
 
-            Riot.BanData datas = dataAnalyzer.CountBanRate(MatchesInfo);          
+            datas = dataAnalyzer.CountBanRate(MatchesInfo);          
             
 
+            return View(datas);
+        }
+
+        public IActionResult Sort()
+        {
+
+
+
+            MessageBox.Show("DZIALA");
+            //datas.ChampionBans = datas.ChampionBans.OrderByDescending(ban => ban.pickChampionDatas.Max(pc => pc.Value.Winrate)).ToList();
             return View(datas);
         }
 

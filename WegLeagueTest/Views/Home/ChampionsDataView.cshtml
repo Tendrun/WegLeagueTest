@@ -28,7 +28,7 @@
                 Win Rate
             </th>
             <th>
-                Pick Rate
+                <a asp-page-handler="Sort">Pick Rate</a>
             </th>
             <th>
                 Ban Rate
@@ -44,18 +44,41 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.ChampionBans) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rank)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BanRate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BanRate)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.ChampionBans)
+        {
+            @foreach (var item_ in item.pickChampionDatas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rank)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item_.Key)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item_.Value.Tier)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item_.Value.Winrate)%
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item_.Value.Pickrate)%
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BanRate)%
+                    </td>
+                    <td>
+                        null
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item_.Value.Matches)
+                    </td>
+                </tr>
+            }
+
+        }
     </tbody>
 </table>

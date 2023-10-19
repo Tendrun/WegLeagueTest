@@ -12,6 +12,7 @@ namespace WegLeagueTest.Riot
 
     public class BanData
     {
+        public int NumbOfMatches { get; set; }
         public int NumofAllBans { get; set; }
         public List<ChampionBan> ChampionBans { get; set; } = new List<ChampionBan>();
     }
@@ -29,10 +30,10 @@ namespace WegLeagueTest.Riot
     }
 
     public class PickChampionData
-    {
-        public ChampionPosition Role { get; set; }
+    {        
         public TierChampion Tier { get; set; }
-        public float Winrate { get; set; }
+        public double Winrate { get; set; }
+        public int wins { get; set; }
         public float Pickrate { get; set; }
         public int Matches { get; set; }
     }
